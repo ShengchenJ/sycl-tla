@@ -106,7 +106,7 @@ __global__ void
       printf("[%zu]: %f vs %f\n", idx, (double) a, (double) b);
 #endif
       *equal = 0;
-      return;
+      // return;
     }
   }
 }

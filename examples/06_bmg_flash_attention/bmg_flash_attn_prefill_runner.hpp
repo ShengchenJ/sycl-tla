@@ -61,13 +61,13 @@ struct Options {
   bool is_causal;
   bool varlen = false;
   std::string scheduler;
-
+  std::string input_file;
   int batch, num_heads_q, num_heads_kv, seq_len_qo, seq_len_kv, head_size_qk, head_size_vo, iterations;
   float softmax_scale;
 
   Options()
       : help(false), error(false), is_causal(false), varlen(false), batch(32), num_heads_q(16), num_heads_kv(16), seq_len_qo(512), head_size_qk(128),
-        seq_len_kv(512), head_size_vo(128), iterations(100), softmax_scale(1.f), scheduler("Individual") {}
+        seq_len_kv(512), head_size_vo(128), iterations(100), softmax_scale(1.f), scheduler("Individual"), input_file("") {}
 
   // Parses the command line
   void parse(int argc, char const **args) {
@@ -96,6 +96,7 @@ struct Options {
     cmd.get_cmd_line_argument("head_size_vo", head_size_vo, HEAD_DIM);
     cmd.get_cmd_line_argument("head_size_qk", head_size_qk, head_size_vo);
     cmd.get_cmd_line_argument("iterations", iterations, 100);
+    cmd.get_cmd_line_argument("input_file", input_file, std::string(""));
 
     softmax_scale = 1 / sqrt(static_cast<float>(head_size_qk));
   }
@@ -103,7 +104,7 @@ struct Options {
   /// Prints the usage statement.
   std::ostream &print_usage(std::ostream &out) const {
 
-    out << "BMG Flash Attention v2 Example\n\n"
+    out << "BMG Flash Attention v2 sssExample\n\n"
         << "Options:\n\n"
         << "  --help                      If specified, displays this usage statement\n\n"
         << "  --is_causal                 Apply Causal Mask to the output of first Matmul\n"
@@ -116,6 +117,7 @@ struct Options {
         << "  --seq_len_kv=<int>          Sets the Sequence length of the Key-Value pair in Multi-Head Self Attention module\n"
         << "  --head_size_qk=<int>        Sets the Attention Head dimension of the 1st Matrix Multiplication in Multi-Head Self Attention module\n"
         << "  --head_size_vo=<int>        Sets the Attention Head dimension of the 2nd Matrix Multiplication in Multi-Head Self Attention module\n"
+        << "  --input_file=<int>          Input file path for the Multi-Head Self Attention module\n"
         << "  --iterations=<int>          Iterations\n\n";
 
     return out;
@@ -431,7 +433,7 @@ template <class FMHAPrefillKernel, bool isVarLen> struct ExampleRunner {
   ProblemShapeType initialize(const Options &options) {
     auto problem_shape_in =
         cute::make_tuple(options.batch, options.num_heads_q, options.num_heads_kv, options.seq_len_qo, options.seq_len_kv, options.head_size_qk, options.head_size_vo);
-
+    std::cout << "ooooo " << options.input_file << std::endl;
     ProblemShapeType problem_shape;
     decltype(problem_shape_in) problem_size;
 

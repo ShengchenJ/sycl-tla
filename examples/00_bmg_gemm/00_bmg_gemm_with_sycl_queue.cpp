@@ -73,7 +73,7 @@ struct Options {
 
   int m, n, k, l, iterations;
   float alpha, beta;
-
+  std::string infile;
   Options():
     help(false),
     error(false),
@@ -89,7 +89,7 @@ struct Options {
       help = true;
       return;
     }
-
+    cmd.get_cmd_line_argument("infile", infile, file_name);
     cmd.get_cmd_line_argument("m", m, 8192);
     cmd.get_cmd_line_argument("n", n, 8192);
     cmd.get_cmd_line_argument("k", k, 8192);
@@ -111,6 +111,7 @@ struct Options {
       << "  --l=<int>                   Sets the L extent (batch count) of the GEMM\n"
       << "  --alpha=<s32>               Epilogue scalar alpha\n"
       << "  --beta=<s32>                Epilogue scalar beta\n\n"
+      << "  --infile=<string>           Input file for matrix data\n\n"
       << "  --iterations=<int>          Iterations\n\n";
 
     return out;
@@ -283,7 +284,7 @@ struct ExampleRunner {
     ProblemShapeType problem_size = ProblemShapeType{options.m, options.n, options.k, options.l};
 
     auto q = compat::create_queue();
-    std::ifstream infile(file_name);
+    std::ifstream infile(options.infile);
     if (!infile.is_open()) {
         printf("Error: Cannot open file %s\n", file_name.c_str());
         return;

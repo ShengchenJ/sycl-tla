@@ -58,6 +58,7 @@ int main(int argc, const char **argv) {
   //
 
   Options options;
+  std::cout << "XXXXXXXXXXXXXssss\n";
 
   options.parse(argc, argv);
 

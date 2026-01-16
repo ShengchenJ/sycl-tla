@@ -78,7 +78,7 @@ bool initialize_block(Element* block, std::size_t size, uint64_t seed, Args_t&&.
         if (infile >> temp) {
             element = static_cast<Element>(temp);
         } else {
-            printf("Warning: Not enough data in file, remaining elements will be zero\n");
+            printf("Warning: Not enough data in file, remaining elementsxx will be zero\n");
             break;
         }
     }
